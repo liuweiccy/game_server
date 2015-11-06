@@ -17,9 +17,9 @@
        %% 网络参数
        {tcp_options,
         [
-            {packet, 0},
-            {active, false},
-            {reuseaddr, true},
+            %{packet, raw},
+            %{active, false},
+            %{reuseaddr, true},
             {nodelay, false},
             {delay_send, true},
             {send_timeout, 5000},
