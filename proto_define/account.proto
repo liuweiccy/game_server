@@ -1,0 +1,36 @@
+message pb_player {
+	required int64 player_id = 1;
+	required string name = 2;
+	required int32 sex = 3;
+	required int32 career = 4;
+}
+
+//0x1001 @账号登陆
+message account_login_tos {
+	required string account = 1;
+}
+
+//0x1002 @账号登陆回应
+message account_login_toc {
+	required int32 code = 1;
+	repeated pb_player role_list = 2;
+}
+
+//0x1003 @创建角色
+message create_role_tos {
+	required string account = 1;
+	required string name = 2;
+	required int32 sex = 3;
+	required int32 career = 4;
+}
+
+//0x1004 @创建角色回应
+message create_role_toc {
+	required int32 code = 1;
+	optional pb_player role = 2;
+}
+
+//0x1005 @选择账号登陆
+message select_login_tos {
+	required int64 player_id = 1;
+}

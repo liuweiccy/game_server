@@ -1,0 +1,33 @@
+{application, game,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { game_app, []}},
+  {env,
+   [
+       %% 网络模块参数
+       {protocol_options, []},
+       %% acceptor进程数
+       {tcp_acceptor_num, 10},
+       %% 网络参数
+       {tcp_options,
+        [
+            {packet, 0},
+            {active, false},
+            {reuseaddr, true},
+            {nodelay, false},
+            {delay_send, true},
+            {send_timeout, 5000},
+            {keepalive, true},
+            {exit_on_close, true}
+        ]
+       }
+   ]
+  },
+  {start_phases, []}
+ ]}.
