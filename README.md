@@ -18,3 +18,6 @@ server config file, to config db network param
 
     config/game.config
   
+start server, first release game code
+
+    ./rel/game/bin/game console
