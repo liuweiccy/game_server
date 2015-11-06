@@ -101,8 +101,7 @@ remote_output(Pid) ->
 make_name(LoggerDir) ->
 	ok = filelib:ensure_dir(LoggerDir),
     {{Y,M,D},{_Hour, _Min, _Sec}} = erlang:localtime(),
-    LoggerDir ++  io_lib:format("log_~w~.2.0w~.2.0w.log",[Y,M,D]).
-
+    filename:join(LoggerDir, io_lib:format("log_~w~.2.0w~.2.0w.log",[Y,M,D])).
 
 % debug message ignore
 write_event(_Fd, {_Time, {debug_msg, _GL, _Other}}) ->
