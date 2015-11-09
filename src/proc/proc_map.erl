@@ -3,6 +3,7 @@
 %% 地图底层代码。主要实现所有地图所拥有的公共方法，作为所有地图类型的父类
 %% 所有具体地图通过 实现map_template的地图回调 实现具体复杂逻辑
 %% 地图类型对应的处理模块在map_template.erl 添加
+%% 地图只处理ai，对象管理，格子管理， 战斗由玩家进程本身处理，负载均衡
 
 -module(proc_map).
 -behaviour(gen_server).
@@ -112,10 +113,6 @@ handle_cast({trigger, Msg}, MapState = #map_state{map_id = MapID, map_doc_id = M
 				ModuleState
 		end,
     {noreply, MapState#map_state{module_state = NewModuleState}};
-
-%% 玩家发起攻击
-handle_cast({attack, _Data}, MapState) ->
-	{noreply, MapState};
 
 %% 地图行走
 handle_cast({move, _Data}, MapState) ->
