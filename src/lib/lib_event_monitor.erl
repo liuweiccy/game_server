@@ -1,4 +1,4 @@
-%% @author dzlaozhu35@outlook.com
+%% @author 503407245@qq.com
 %% @doc 事件监控管理模块
 %% 			 1. 存储于玩家进程字典
 %%			 2. 存储结构 

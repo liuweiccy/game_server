@@ -46,8 +46,8 @@
 -define(ONE_DAY_SECOND, 24 * 60 * 60).
 
 %% 进程闭包函数请求
--define(INVOKER_ASYNC(F), {async, F}).
--define(INVOKER_SYNC(F), {sync, F}).
+-define(INVOKE_ASYNC(F), {invoke_async, F}).
+-define(INVOKE_SYNC(F), {invoke_sync, F}).
 
 -define(SUPERVIOR_CHILD_SPEC(Module, Params), {Module, {Module, start_link,Params}, transient, infinity, supervisor, [Module]}).
 

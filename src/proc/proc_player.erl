@@ -1,4 +1,4 @@
-%% @author jiangxiaowei
+%% @author 503407245@qq.com
 %% @doc 玩家进程.
 
 
@@ -20,8 +20,6 @@
 %% ====================================================================
 -export([start_link/4, stop/1]).
 
--export([async_run/2, sync_apply/2]).
-
 -export([is_alive/1]).
 
 -type opts() :: []. % 暂无控制参数
@@ -30,7 +28,7 @@ start_link(Ref, Socket, Transport, Opts) ->
     gen_server_boot:start_link(?MODULE, [Ref, Socket, Transport, Opts], []).
 
 stop(PlayerID) when erlang:is_integer(PlayerID) ->
-	stop(util:register_name(player, PlayerID));
+	stop(lib_player:get_register_name(PlayerID));
 stop(RegName) when erlang:is_atom(RegName) ->
 	case is_alive(RegName) of
 		true ->
@@ -42,12 +40,7 @@ stop(RegName) when erlang:is_atom(RegName) ->
 is_alive(RegName) when erlang:is_atom(RegName) ->
     erlang:whereis(RegName) =/= undefined;
 is_alive(PlayerID) when erlang:is_integer(PlayerID)->
-    erlang:whereis(util:register_name(player, PlayerID)) =/= undefined.
-
-async_run(PlayerID, F) ->
-    gen_server:cast(util:register_name(player, PlayerID), {async_run, F}).
-sync_apply(PlayerID, F) ->
-    ?CALL(util:register_name(player, PlayerID), {sync_apply, F}).
+    erlang:whereis(lib_player:get_register_name(PlayerID)) =/= undefined.
 
 
 %% ====================================================================
@@ -63,37 +56,12 @@ init([_Ref, Socket, _Transport, _Opts]) ->
 	{ok, #player_state{socket = Socket}}.
 
 %% handle_call/3
-handle_call({sync_apply, F}, _From, PlayerStatus = #player_state{login_step = ?P_LOGIN_STATUS_GAME}) ->
-	case catch F(PlayerStatus) of
-		{ok, Reply} ->
-			{reply, Reply, PlayerStatus};
-		{ok, Reply, NewPlayerStatus} ->
-			{reply, Reply, NewPlayerStatus};
-		_Reason ->
-            ?ERROR("[~w]的玩家进程处理sync_apply消息时出错: [Reason:~w]", [lib_player:get_id(PlayerStatus), _Reason]),
-			{reply, error, PlayerStatus}
-	end;
-
 handle_call(_Request, _From, State) ->
 	?WARNING("[mod_player]进程 handle_call 不匹配, Request:~w, From:~w, State:~w",[_Request, _From, State]),
     {reply, ok, State}.
 
 
 %% handle_cast/2
-handle_cast(stop, State) ->
-	{stop, normal, State};
-
-handle_cast({async_run, F}, PlayerStatus = #player_state{login_step = ?P_LOGIN_STATUS_GAME}) ->
-	case catch F(PlayerStatus) of
-		ok ->
-			{noreply, PlayerStatus};
-		{ok, NewPlayerStatus} when is_record(NewPlayerStatus,player_state)->
-			{noreply, NewPlayerStatus};
-		_Reason ->
-            ?ERROR("[~w]的玩家进程处理async_run消息时出错: [Reason:~w]", [lib_player:get_id(PlayerStatus), _Reason]),
-			{noreply, PlayerStatus}
-	end;	
-
 handle_cast({send, BinData} , PlayerStatus = #player_state{player_id = PlayerID, login_step = ?P_LOGIN_STATUS_GAME, socket = Socket}) ->
 	try gen_tcp:send(Socket, BinData)
 	catch _:Reason -> ?WARNING("玩家[~w]发送协议错误, 描述:~w",[PlayerID, Reason]) end,

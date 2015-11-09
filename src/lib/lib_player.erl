@@ -1,4 +1,4 @@
-%% @author jiangxiaowei
+%% @author 503407245@qq.com
 %% @doc lib_player.
 
 
@@ -11,7 +11,7 @@
 %% ====================================================================
 %% API functions
 %% ====================================================================
--export([get_id/0, set_id/1, get_id/1, get_socket/0, set_socket/1]).
+-export([get_register_name/1, get_id/0, set_id/1, get_id/1, get_socket/0, set_socket/1]).
 
 -export([on_enter/1, on_save/1]).
 
@@ -31,6 +31,9 @@ set_id(PlayerID) ->
 
 get_id(#player_state{player_id = PlayerID}) ->
 	PlayerID.
+
+get_register_name(PlayerID) ->
+    util:register_name(player, PlayerID).
 
 get_socket() ->
     util:get_dict(player_socket, undefined).
@@ -63,7 +66,7 @@ go_new_map(PlayerId, MapDocID, Behaviour) ->
 	go_new_map(PlayerId, MapDocID, PosX, PosY, Behaviour).
 
 go_new_map(PlayerId, MapDocID, PosX, PosY, Behaviour) ->
-	proc_player:async_run(PlayerId,
+	gen_server_boot:invoke_async(lib_player:get_register_name(PlayerId),
 						 fun(PlayerStatus) ->
 								 NewPlayerStatus = leave_map(MapDocID, PosX, PosY, Behaviour, PlayerStatus),
 								 {ok, NewPlayerStatus}

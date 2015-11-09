@@ -1,4 +1,4 @@
-%% @author  dzlaozhu35@outlook.com
+%% @author  503407245@qq.com
 %% @doc       固定地图逻辑模块
 
 -module(fixed_map).

@@ -21,8 +21,8 @@ start(_StartType, _StartArgs) ->
     %% 创建ETS
     ok = memcache:create_ets(),
 
-    %% 加载DETS
-    ok = memcache:create_dets(),
+    %% 初始化数据库
+    ok = db_interface:init(),
 
     %% 启动玩家进程监控树
     ok = sup_player:start(SupPid),
@@ -47,6 +47,6 @@ stop(_State) ->
     %% 关闭玩家进程（确保保存数据退出）
 
     %% 关闭dets
-    memcache:close_dets(),
+    db_interface:close(),
 
     ok.

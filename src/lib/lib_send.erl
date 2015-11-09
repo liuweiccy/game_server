@@ -1,4 +1,4 @@
-%% @author jiangxiaowei
+%% @author 503407245@qq.com
 %% @doc 协议发送模块.
 
 

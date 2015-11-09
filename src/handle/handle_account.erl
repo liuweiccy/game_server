@@ -1,4 +1,4 @@
-%% @author dzlaozhu35@outlook.com
+%% @author 503407245@qq.com
 %% @doc  account协议处理
 
 -module(handle_account).

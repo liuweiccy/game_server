@@ -13,12 +13,13 @@
 %% ====================================================================
 -export([
 		 init/0,
+         get_register_name/1,
 		 get_map_id/0, 
 		 set_map_id/1]).
 
 -export([
 		 defaule_map_pos/0,
-		 get_map_increase_id/1, 
+		 get_map_increase_id/1,
 		 get_map_doc_id/1,
 		 resolve_map_id/1,
 		 resolve_map_doc_id/1,
@@ -52,13 +53,16 @@ get_map_id() ->
 set_map_id(MapID) ->
 	util:set_dict(?MAP_ID, MapID).
 
+get_register_name(MapID) ->
+    util:register_name(map, MapID).
+
 %% 获取模版ID
 get_map_doc_id(MapID) ->
 	MapID div ?TEN_MILLION.
 
-%% 获取地图自增ID
+%% 获取地图自增ID（动态地图）
 get_map_increase_id(MapDocID) ->
-	IncreaseID = lib_increase:map_id(MapDocID),
+	IncreaseID = util:longunixtime(),
 	MapDocID * ?TEN_MILLION + IncreaseID.
 
 %% 根据MapId 获取详细信息

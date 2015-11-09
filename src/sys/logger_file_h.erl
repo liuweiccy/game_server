@@ -1,4 +1,4 @@
-%% @author jiangxw
+%% @author 503407245@qq.com
 %% @doc write error_logger event  to logfile
 -module(logger_file_h).
 

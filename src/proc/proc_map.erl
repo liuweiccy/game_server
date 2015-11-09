@@ -1,4 +1,4 @@
-%% @author dzlaozhu35@outlook.com
+%% @author 503407245@qq.com
 %% @doc 地图进程
 %% 地图底层代码。主要实现所有地图所拥有的公共方法，作为所有地图类型的父类
 %% 所有具体地图通过 实现map_template的地图回调 实现具体复杂逻辑
@@ -24,7 +24,7 @@ start_link(MapID, MapDocID, MapModule) ->
     gen_server_boot:start_link(?MODULE, [MapID,MapDocID, MapModule], []).
 
 stop(MapID) when erlang:is_integer(MapID) ->
-	stop(util:register_name(map, MapID));
+	stop(lib_map:get_register_name(MapID));
 stop(RegName) when erlang:is_atom(RegName) ->
 	case is_alive(RegName) of
 		true ->
@@ -36,16 +36,16 @@ stop(RegName) when erlang:is_atom(RegName) ->
 is_alive(RegName) when erlang:is_atom(RegName) ->
 	erlang:whereis(RegName) =/= undefined;
 is_alive(MapID) when erlang:is_integer(MapID)->
-	erlang:whereis(util:register_name(map, MapID)) =/= undefined.
+	erlang:whereis(lib_map:get_register_name(MapID)) =/= undefined.
 
 enter(MapID, PosX, PosY, Behaviour, PlayerStatus) ->
-	gen_server:call(util:register_name(map, MapID), {enter, PosX, PosY, Behaviour, PlayerStatus}).
+	gen_server:call(lib_map:get_register_name(MapID), {enter, PosX, PosY, Behaviour, PlayerStatus}).
 
 leave(MapID, PlayerID, Behaviour) ->
-	gen_server:call(util:register_name(map, MapID), {leave, PlayerID, Behaviour}).
+	gen_server:call(lib_map:get_register_name(MapID), {leave, PlayerID, Behaviour}).
 
 trigger(MapID, Msg) ->
-	gen_server:cast(util:register_name(map, MapID), {trigger, Msg}).
+	gen_server:cast(lib_map:get_register_name(MapID), {trigger, Msg}).
 
 %% ====================================================================
 %% Behavioural functions 
@@ -57,7 +57,7 @@ init([MapID, MapDocID, MapModule]) ->
 	case catch MapModule:on_init(MapID, MapDocID) of
         {ok, NewState} ->
 			%% 注册地图进程名,   map ++ MapID 
-			true = erlang:register(util:register_name(map, MapID), self()),
+			true = erlang:register(lib_map:get_register_name(MapID), self()),
 			%% 启动地图循环
 			erlang:send_after(?MAP_LOOP_TIME, self(),  map_loop),
 			?DEBUG("地图ID[~w] 地图模块[~w]  启动成功",[MapID, MapModule]),
@@ -102,10 +102,6 @@ handle_call(Request, _From, MapState = #map_state{map_id = MapID, module = MapMo
 	{reply, {error, nomatch}, MapState}.
 
 %% ==========  handle_cast/2 =====================
-%% 关闭地图
-handle_cast(stop, MapState) ->
-	{stop, normal, MapState};
-			
 %% 地图透传消息
 handle_cast({trigger, Msg}, MapState = #map_state{map_id = MapID, map_doc_id = MapDocID, module = MapModule, module_state = ModuleState}) ->
 	NewModuleState = 
