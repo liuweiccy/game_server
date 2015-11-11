@@ -18,7 +18,6 @@
 		 set_map_id/1]).
 
 -export([
-		 defaule_map_pos/0,
 		 get_map_increase_id/1,
 		 get_map_doc_id/1,
 		 resolve_map_id/1,
@@ -29,9 +28,6 @@
 		 add_player/1, 
 		 get_map_player_ids/0, 
 		 del_player/1]).
-
-defaule_map_pos() ->
-	{11, 12, 22}.
 
 init() ->
 	lists:foreach(
@@ -62,7 +58,7 @@ get_map_doc_id(MapID) ->
 
 %% 获取地图自增ID（动态地图）
 get_map_increase_id(MapDocID) ->
-	IncreaseID = util:longunixtime(),
+	IncreaseID = util:longunixtime(), %% 临时代码，真实有缓存的自增ID累加
 	MapDocID * ?TEN_MILLION + IncreaseID.
 
 %% 根据MapId 获取详细信息
