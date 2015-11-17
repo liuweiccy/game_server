@@ -36,6 +36,9 @@ start(_StartType, _StartArgs) ->
     %% 启动网络相关进程和监控树
     networking:start(SupPid),
 
+    %% 启动代码自动编译更新
+    sync:go(),
+
     ?DEBUG("游戏服务器启动成功"),
 
     {ok, SupPid}.
