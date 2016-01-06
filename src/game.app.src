@@ -11,7 +11,7 @@
   {env,
    [
        {log_path,"./log"},
-       {log_level,debug},
+       {log_level,1},
        {db_path,"./db"},
        %%监听端口
        {listen_port,1708},
