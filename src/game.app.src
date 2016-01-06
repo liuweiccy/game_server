@@ -10,6 +10,13 @@
   {mod, { game_app, []}},
   {env,
    [
+       {log_path,"./log"},
+       {log_level,debug},
+       {db_path,"./db"},
+       %%监听端口
+       {listen_port,1708},
+       %%最大连接数
+       {max_connections,5000},
        %% 网络模块参数
        {protocol_options, []},
        %% acceptor进程数
